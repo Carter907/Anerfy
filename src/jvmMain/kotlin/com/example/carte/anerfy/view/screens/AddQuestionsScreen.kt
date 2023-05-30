@@ -1,8 +1,10 @@
 package com.example.carte.anerfy.view.screens
 
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.carte.anerfy.model.Difficulty
 import com.example.carte.anerfy.model.Quiz
 import com.example.carte.anerfy.view.StandardScreen
@@ -24,7 +26,12 @@ class AddQuestionsScreen(
     @Composable
     fun QuestionForm() {
         StandardScreen(
-            title = "Add a Question to your Quiz!"
+            title = "Add a Question to your Quiz!",
+            bottomBar = {
+
+                AddQuestionButton();
+
+            }
 
         ) {
             // get the question itself
@@ -47,6 +54,37 @@ class AddQuestionsScreen(
                 placeholder = { Text("please enter the question") }
             )
 
+        }
+
+    }
+
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun AddQuestionButton() {
+
+        var questionAlertDialogShowing = remember { mutableStateOf(false) }
+        Button(onClick = {
+            questionAlertDialogShowing.value = true;
+        }) {
+            Text("Add Question")
+
+            if (questionAlertDialogShowing.value)
+                AlertDialog(
+
+                    onDismissRequest = { questionAlertDialogShowing.value = false },
+                    buttons = {
+                              Button(onClick = {questionAlertDialogShowing.value = false}) {
+                                  Text("OK")
+
+                              }
+
+                    },
+                    text = {
+                        Text("Question has been added");
+                    }
+
+                )
         }
 
     }
