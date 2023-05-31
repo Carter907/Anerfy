@@ -5,9 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b6b6409-00d6-4297-839b-3d22e29334af" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/jvmMain/kotlin/com/example/carte/anerfy/view/screens/AddQuestionScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/app.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/app.mv.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jvmMain/kotlin/com/example/carte/anerfy/view/screens/AddQuestionsScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/kotlin/com/example/carte/anerfy/view/screens/AddQuestionsScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/app.trace.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/app.trace.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jvmMain/kotlin/com/example/carte/anerfy/model/Question.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/kotlin/com/example/carte/anerfy/model/Question.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jvmMain/kotlin/com/example/carte/anerfy/view/animate/LoadingAnimation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/kotlin/com/example/carte/anerfy/view/animate/LoadingAnimation.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jvmMain/kotlin/com/example/carte/anerfy/view/screens/AddQuestionsScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jvmMain/kotlin/com/example/carte/anerfy/view/screens/CreateQuizScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/kotlin/com/example/carte/anerfy/view/screens/CreateQuizScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jvmMain/kotlin/com/example/carte/anerfy/view/screens/QuizzesScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/jvmMain/kotlin/com/example/carte/anerfy/view/screens/QuizzesScreen.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +152,8 @@
       <workItem from="1685371958756" duration="1528000" />
       <workItem from="1685392599935" duration="2583000" />
       <workItem from="1685453478074" duration="57000" />
-      <workItem from="1685453547916" duration="1029000" />
+      <workItem from="1685453547916" duration="1275000" />
+      <workItem from="1685479728026" duration="15099000" />
     </task>
     <servers />
   </component>

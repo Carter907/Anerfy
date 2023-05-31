@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Refresh
@@ -12,6 +14,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun LoadingVisibilityAnimation(visible: MutableState<Boolean>) {
@@ -44,7 +48,7 @@ fun LoadingAnimation() {
     Icon(
         Icons.Rounded.Refresh,
         "loading icon",
-        modifier = Modifier.rotate(rotation)
+        modifier = Modifier.rotate(rotation).size(30.dp)
     );
 
 

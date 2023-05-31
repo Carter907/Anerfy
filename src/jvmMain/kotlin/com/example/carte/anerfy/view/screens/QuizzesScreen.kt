@@ -47,14 +47,14 @@ class QuizzesScreen : Screen {
 
         }
 
-        LoadingVisibilityAnimation(waitingOnQuizzes)
+
         Column(
             modifier = Modifier.padding(20.dp)
         ) {
-
+            LoadingVisibilityAnimation(waitingOnQuizzes)
             QuizListView(quizzesList,
                 addQuestionsOnClick = {
-                    screenShowing.value = AddQuestionsScreen(this)
+                    screenShowing.value = AddQuestionScreen(this)
                 },
                 removeOnClick = {
                     backgroundScope.launch {

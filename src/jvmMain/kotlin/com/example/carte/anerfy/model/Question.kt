@@ -14,7 +14,7 @@ class Question(
     @Column(nullable = false)
     var answer: String,
     @ElementCollection
-    var falseAnswers: Array<String>
+    var possibleAnswers: Array<String>
 ) {
     companion object {
         val jsonConverter: Gson = GsonBuilder().setPrettyPrinting().create();

@@ -76,7 +76,7 @@ class CreateQuizScreen(
             quiz.description = quizDescription
             quiz.difficulty = quizDifficulty
 
-            if (quiz.id != null && find(Quiz::class.java, quiz.id) is Quiz) {
+            if (quiz.id != null && find(Quiz::class.java, quiz.id) != null) {
 
                 merge(quiz);
 
