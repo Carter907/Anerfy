@@ -15,7 +15,7 @@ class TitleScreen : Screen {
 
     @Composable
     override fun Screen(screenShowing: MutableState<Screen>) {
-        StandardScreen(modifier = Modifier) {
+        StandardScreen(title = "Welcome to Anerfy", modifier = Modifier) {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,

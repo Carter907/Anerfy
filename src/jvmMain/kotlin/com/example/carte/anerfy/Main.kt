@@ -12,7 +12,7 @@ import com.example.carte.anerfy.view.screens.TitleScreen
 @Composable
 @Preview
 fun App() {
-    var title by remember { mutableStateOf("Welcome to Anerfy") }
+
     val screen  = remember { mutableStateOf<Screen>(TitleScreen()) }
     MaterialTheme {
 

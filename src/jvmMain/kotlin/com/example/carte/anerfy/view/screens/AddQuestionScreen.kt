@@ -1,18 +1,18 @@
 package com.example.carte.anerfy.view.screens
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.example.carte.anerfy.model.Difficulty
 import com.example.carte.anerfy.model.Question
 import com.example.carte.anerfy.model.Quiz
 import com.example.carte.anerfy.update.QuizRepository
+import com.example.carte.anerfy.view.BasicAlert
 import com.example.carte.anerfy.view.StandardScreen
 
 class AddQuestionScreen(
@@ -25,6 +25,7 @@ class AddQuestionScreen(
         )
 ) : Screen {
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     override fun Screen(screenShowing: MutableState<Screen>) {
 
@@ -43,6 +44,9 @@ class AddQuestionScreen(
 
         var showAnswerMenu by remember { mutableStateOf(false) }
 
+        var showAlertAnswerEmpty by remember { mutableStateOf(false) }
+
+        var showAlertCorrectAnswerMissing by remember { mutableStateOf(false) }
 
 
 
@@ -55,6 +59,9 @@ class AddQuestionScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     AddQuestionButton {
+                        if (correctAnswer !in answerChoices.values.map { it.value }) {
+                            showAlertCorrectAnswerMissing = true
+                        }
                         addQuestionToQuiz(questionContent, answerChoices, correctAnswer)
                     }
                     ResetFormDataButton {
@@ -99,9 +106,28 @@ class AddQuestionScreen(
                     answerChoices
                 ) {
 
-                    correctAnswer = it;
+                    if (it.isNotEmpty()) {
+                        correctAnswer = it;
+                    } else {
+                        showAlertAnswerEmpty = true;
+                    }
+
 
                 }
+                if (showAlertCorrectAnswerMissing) {
+                    BasicAlert(
+                        text = "please make sure you have at least one answer that equals \"$correctAnswer\" or change your current answer.",
+                        onDismissRequest = { showAlertCorrectAnswerMissing = false }
+
+                    )
+
+                }
+
+                if (showAlertAnswerEmpty)
+                    BasicAlert(
+                        text = "Please pick an answer that is not empty",
+                        onDismissRequest = { showAlertAnswerEmpty = false }
+                    )
 
             }
 
@@ -124,21 +150,24 @@ class AddQuestionScreen(
             val answer = letterChoicePair.value;
             val letter = letterChoicePair.key;
 
-            val answerModifier =
+            val answerIcon: @Composable () -> Unit =
                 when {
                     correctAnswer.isNotEmpty() && answer.value == correctAnswer -> {
-                        Modifier.border(BorderStroke(2.dp, Color.Green))
-                    }
-                    correctAnswer.isNotEmpty() -> {
-                        Modifier.border(BorderStroke(2.dp, Color.Red))
+                        { Icon(Icons.Rounded.Check, "Correct") }
                     }
 
-                    else -> Modifier
+                    correctAnswer.isNotEmpty() -> {
+                        { Icon(Icons.Rounded.Close, "Incorrect") }
+
+                    }
+
+                    else -> {
+                        {}
+                    }
                 }
             OutlinedTextField(
                 value = answer.value,
                 onValueChange = { answer.value = it },
-                modifier = answerModifier,
                 placeholder = {
 
                     Text("Answer $letter: ")
@@ -146,8 +175,8 @@ class AddQuestionScreen(
 
                 },
                 label = { Text("$letter") },
-
-                )
+                leadingIcon = answerIcon
+            )
 
 
         }
