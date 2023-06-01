@@ -48,3 +48,19 @@ fun BasicAlert(text: String, onDismissRequest: () -> Unit) {
         modifier = Modifier.width(200.dp)
     )
 }
+
+@Composable
+fun RowPair(composOne: @Composable () -> Unit, composTwo: @Composable () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        composOne.invoke()
+        composTwo.invoke()
+
+
+
+
+    }
+
+}

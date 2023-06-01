@@ -6,7 +6,6 @@ import kotlinx.coroutines.*
 
 interface Repository<T> {
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun <R> withTransaction(action: EntityManager.() -> R): R {
         var result: R;
         val entityManager = QuizRepository.getEntityManager()

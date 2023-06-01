@@ -46,12 +46,11 @@ class QuizzesScreen : Screen {
 
 
         }
-
+        LoadingVisibilityAnimation(waitingOnQuizzes)
 
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp).fillMaxSize()
         ) {
-            LoadingVisibilityAnimation(waitingOnQuizzes)
             QuizListView(quizzesList,
                 addQuestionsOnClick = {
                     screenShowing.value = AddQuestionScreen(this)
@@ -64,6 +63,9 @@ class QuizzesScreen : Screen {
                 },
                 updateOnClick = {
                     screenShowing.value = CreateQuizScreen(this)
+                },
+                startQuizOnClick = {
+                    screenShowing.value = StartQuizScreen(this)
                 }
             )
 
@@ -88,6 +90,7 @@ class QuizzesScreen : Screen {
         addQuestionsOnClick: Quiz.() -> Unit,
         removeOnClick: Quiz.() -> Unit,
         updateOnClick: Quiz.() -> Unit,
+        startQuizOnClick: Quiz.() -> Unit,
     ) {
         Column {
             for (quiz in quizzesList) {
@@ -102,7 +105,8 @@ class QuizzesScreen : Screen {
                             .requiredWidth(300.dp),
                         addQuestionsOnClick = addQuestionsOnClick,
                         removeOnClick = removeOnClick,
-                        updateOnClick = updateOnClick
+                        updateOnClick = updateOnClick,
+                        startQuizOnClick = startQuizOnClick
                     )
 
                 }
@@ -116,6 +120,7 @@ class QuizzesScreen : Screen {
         addQuestionsOnClick: Quiz.() -> Unit,
         removeOnClick: Quiz.() -> Unit,
         updateOnClick: Quiz.() -> Unit,
+        startQuizOnClick: Quiz.() -> Unit,
     ) {
         var showQuizOptions = remember { mutableStateOf(false) }
 
@@ -136,6 +141,7 @@ class QuizzesScreen : Screen {
                 addQuestionsOnClick = addQuestionsOnClick,
                 removeOnClick = removeOnClick,
                 updateOnClick = updateOnClick,
+                startQuizOnClick = startQuizOnClick,
                 quiz = quiz
             );
         }
@@ -147,7 +153,8 @@ class QuizzesScreen : Screen {
         addQuestionsOnClick: Quiz.() -> Unit,
         removeOnClick: Quiz.() -> Unit,
         updateOnClick: Quiz.() -> Unit,
-        quiz: Quiz
+        quiz: Quiz,
+        startQuizOnClick: Quiz.() -> Unit
     ) {
         DropdownMenu(
             expanded = showQuizOptions.value,
@@ -177,6 +184,14 @@ class QuizzesScreen : Screen {
                 }
             ) {
                 Text("update")
+            }
+            DropdownMenuItem(
+                onClick = {
+                    showQuizOptions.value = false;
+                    startQuizOnClick.invoke(quiz)
+                }
+            ) {
+                Text("start quiz")
             }
         }
     }

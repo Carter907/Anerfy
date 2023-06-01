@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.carte.anerfy.model.Difficulty
@@ -13,6 +14,7 @@ import com.example.carte.anerfy.model.Question
 import com.example.carte.anerfy.model.Quiz
 import com.example.carte.anerfy.update.QuizRepository
 import com.example.carte.anerfy.view.BasicAlert
+import com.example.carte.anerfy.view.AlertMessages
 import com.example.carte.anerfy.view.StandardScreen
 
 class AddQuestionScreen(
@@ -44,25 +46,42 @@ class AddQuestionScreen(
 
         var showAnswerMenu by remember { mutableStateOf(false) }
 
-        var showAlertAnswerEmpty by remember { mutableStateOf(false) }
-
-        var showAlertCorrectAnswerMissing by remember { mutableStateOf(false) }
-
-
+        var showAlert by remember { mutableStateOf(false) }
+        var alertMessage by remember { mutableStateOf("") }
 
 
         StandardScreen(
             title = "Add a Question to your Quiz!",
             bottomBar = {
                 Row(
-                    modifier = Modifier.requiredHeight(30.dp).width(300.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+
+                    ) {
                     AddQuestionButton {
-                        if (correctAnswer !in answerChoices.values.map { it.value }) {
-                            showAlertCorrectAnswerMissing = true
+                        when {
+                            questionContent.isEmpty() -> {
+                                alertMessage = AlertMessages.QuestionContentEmpty
+                            }
+
+                            correctAnswer.isEmpty() -> {
+                                alertMessage = AlertMessages.AnswerIsNotSelected
+
+                            }
+
+                            correctAnswer !in answerChoices.values.map { it.value } -> {
+                                alertMessage = AlertMessages.AnswerNotInPossibleAnswers
+
+
+                            }
+
+                            else -> {
+                                addQuestionToQuiz(questionContent, answerChoices, correctAnswer)
+                                alertMessage = AlertMessages.QuestionAdded
+                            }
                         }
-                        addQuestionToQuiz(questionContent, answerChoices, correctAnswer)
+                        showAlert = true;
+
                     }
                     ResetFormDataButton {
                         questionContent = "";
@@ -74,6 +93,9 @@ class AddQuestionScreen(
                         }
 
                     }
+                    Button(onClick = {
+                        screenShowing.value = QuizzesScreen();
+                    }) { Text("Back") }
 
                 }
 
@@ -109,31 +131,26 @@ class AddQuestionScreen(
                     if (it.isNotEmpty()) {
                         correctAnswer = it;
                     } else {
-                        showAlertAnswerEmpty = true;
+                        alertMessage = AlertMessages.AnswerIsNotSelected
+                        showAlert = true;
                     }
 
 
                 }
-                if (showAlertCorrectAnswerMissing) {
+                if (showAlert) {
                     BasicAlert(
-                        text = "please make sure you have at least one answer that equals \"$correctAnswer\" or change your current answer.",
-                        onDismissRequest = { showAlertCorrectAnswerMissing = false }
-
+                        text = alertMessage,
+                        onDismissRequest = { showAlert = false }
                     )
 
                 }
-
-                if (showAlertAnswerEmpty)
-                    BasicAlert(
-                        text = "Please pick an answer that is not empty",
-                        onDismissRequest = { showAlertAnswerEmpty = false }
-                    )
 
             }
 
         }
 
     }
+
 
     @Composable
     fun ResetFormDataButton(onClick: () -> Unit) {
@@ -144,8 +161,6 @@ class AddQuestionScreen(
 
     @Composable
     fun AnswerTextboxes(answerChoices: HashMap<Char, MutableState<String>>, correctAnswer: String) {
-
-
         for (letterChoicePair in answerChoices) {
             val answer = letterChoicePair.value;
             val letter = letterChoicePair.key;
@@ -224,18 +239,21 @@ class AddQuestionScreen(
     ) {
         QuizRepository.withTransaction {
 
-            quiz.questions + Question(
-                content = questionContent,
-                possibleAnswers = answerChoices.values.map { it.value }.toTypedArray(),
-                answer = correctAnswer
+            quiz.questions = hashSetOf(*quiz.questions.toTypedArray().plus(
+                Question(
+                    content = questionContent,
+                    possibleAnswers = answerChoices.values.map { it.value }.toTypedArray(),
+                    answer = correctAnswer
 
-            );
+                )
+            ))
 
             if (quiz.id != null && find(Quiz::class.java, quiz.id) != null) {
 
                 merge(quiz);
 
             } else {
+
                 persist(quiz)
             }
         }

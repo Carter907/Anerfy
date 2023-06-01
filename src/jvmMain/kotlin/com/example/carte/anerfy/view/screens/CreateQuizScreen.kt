@@ -37,7 +37,8 @@ class CreateQuizScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .requiredHeight(50.dp)
+                        .requiredHeight(50.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
                     SubmitButton {
@@ -49,6 +50,11 @@ class CreateQuizScreen(
                             )
                         }
 
+
+                        screenShowing.value = QuizzesScreen();
+                    }
+
+                    SkipToQuizzesButton {
 
                         screenShowing.value = QuizzesScreen();
                     }
@@ -86,6 +92,12 @@ class CreateQuizScreen(
 
 
         }
+
+    }
+
+    @Composable
+    fun SkipToQuizzesButton(onClick: () -> Unit) {
+        Button(onClick = onClick) { Text("Go to Quizzes") }
 
     }
 
