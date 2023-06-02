@@ -25,7 +25,7 @@ class TitleScreen : Screen {
                 Button(
                     content = { Text("next") },
                     onClick = {
-                        screenShowing.value = CreateQuizScreen();
+                        screenShowing.value = QuizzesScreen();
                     }
                 )
             }

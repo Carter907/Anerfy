@@ -16,6 +16,10 @@ import com.example.carte.anerfy.update.QuizRepository
 import com.example.carte.anerfy.view.BasicAlert
 import com.example.carte.anerfy.view.AlertMessages
 import com.example.carte.anerfy.view.StandardScreen
+import jakarta.persistence.Column
+import jakarta.persistence.ElementCollection
+
+const val NUM_OF_QUESTIONS = 4;
 
 class AddQuestionScreen(
     private val quiz: Quiz =
@@ -24,25 +28,29 @@ class AddQuestionScreen(
             description = "",
             difficulty = Difficulty.EASY,
             questions = hashSetOf()
+        ),
+    private val question: Question =
+        Question(
+            content = "",
+            answer = "",
+            possibleAnswers = Array(NUM_OF_QUESTIONS) { "" }
         )
 ) : Screen {
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     override fun Screen(screenShowing: MutableState<Screen>) {
 
 
-        val answerChoices = hashMapOf(
+        val answerChoices = HashMap<Char, MutableState<String>>();
 
-            'A' to remember { mutableStateOf("") },
-            'B' to remember { mutableStateOf("") },
-            'C' to remember { mutableStateOf("") },
-            'D' to remember { mutableStateOf("") },
-        )
+        for (letter in 'A'..'D') {
+            answerChoices.put(letter, remember { mutableStateOf(question.possibleAnswers[letter.code-65])})
 
-        var questionContent by remember { mutableStateOf("") }
+        }
 
-        var correctAnswer by remember { mutableStateOf("") };
+        var questionContent by remember { mutableStateOf(question.content) }
+
+        var correctAnswer by remember { mutableStateOf(question.answer) };
 
         var showAnswerMenu by remember { mutableStateOf(false) }
 
@@ -84,6 +92,7 @@ class AddQuestionScreen(
 
                     }
                     ResetFormDataButton {
+
                         questionContent = "";
                         correctAnswer = "";
                         showAnswerMenu = false;
@@ -239,14 +248,28 @@ class AddQuestionScreen(
     ) {
         QuizRepository.withTransaction {
 
-            quiz.questions = hashSetOf(*quiz.questions.toTypedArray().plus(
-                Question(
-                    content = questionContent,
-                    possibleAnswers = answerChoices.values.map { it.value }.toTypedArray(),
-                    answer = correctAnswer
+            val newQuestion = question.apply {
+                content = questionContent;
+                answer = correctAnswer;
+                possibleAnswers = answerChoices.values.map { it.value }.toTypedArray();
+            }
 
-                )
-            ))
+            quiz.questions = hashSetOf(
+                *quiz.questions.toMutableList().run {
+
+                    val replacedQuestion = find { it.id == newQuestion.id}
+
+                    if (replacedQuestion != null) {
+                        set(indexOf(replacedQuestion), newQuestion)
+                    } else {
+                        add(newQuestion)
+                    }
+
+
+
+                    toTypedArray()
+                }
+            )
 
             if (quiz.id != null && find(Quiz::class.java, quiz.id) != null) {
 
@@ -270,7 +293,7 @@ class AddQuestionScreen(
             questionAlertDialogShowing.value = true;
 
         }) {
-            Text("Add Question")
+            Text("Save Changes")
 
         }
 

@@ -42,13 +42,13 @@ class CreateQuizScreen(
                 ) {
 
                     SubmitButton {
-                        GlobalScope.launch {
+
                             submitQuiz(
                                 quizName.value,
                                 quizDescription.value,
                                 quizDifficulty.value,
                             )
-                        }
+
 
 
                         screenShowing.value = QuizzesScreen();

@@ -32,6 +32,13 @@ fun StandardScreen(
     )
 }
 
+@Composable
+fun BackButton(onClick: () -> Unit) {
+    Button(onClick = onClick) {
+        Text("Back")
+    }
+}
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BasicAlert(text: String, onDismissRequest: () -> Unit) {

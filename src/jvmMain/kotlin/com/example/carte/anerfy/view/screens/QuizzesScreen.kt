@@ -44,7 +44,6 @@ class QuizzesScreen : Screen {
             }
 
 
-
         }
         LoadingVisibilityAnimation(waitingOnQuizzes)
 
@@ -52,8 +51,8 @@ class QuizzesScreen : Screen {
             modifier = Modifier.padding(20.dp).fillMaxSize()
         ) {
             QuizListView(quizzesList,
-                addQuestionsOnClick = {
-                    screenShowing.value = AddQuestionScreen(this)
+                editQuestionsOnClick = {
+                    screenShowing.value = EditQuestionsScreen(this)
                 },
                 removeOnClick = {
                     backgroundScope.launch {
@@ -87,29 +86,30 @@ class QuizzesScreen : Screen {
     @Composable
     fun QuizListView(
         quizzesList: SnapshotStateList<Quiz>,
-        addQuestionsOnClick: Quiz.() -> Unit,
+        editQuestionsOnClick: Quiz.() -> Unit,
         removeOnClick: Quiz.() -> Unit,
         updateOnClick: Quiz.() -> Unit,
         startQuizOnClick: Quiz.() -> Unit,
     ) {
         Column {
             for (quiz in quizzesList) {
-                Row(
-                    modifier = Modifier
-                        .border(BorderStroke(3.dp, Color.Blue))
+
+                Surface(
+                    elevation = 10.dp
                 ) {
                     QuizHolder(
                         quiz,
                         modifier = Modifier
                             .wrapContentHeight()
                             .requiredWidth(300.dp),
-                        addQuestionsOnClick = addQuestionsOnClick,
+                        editQuestionsOnClick = editQuestionsOnClick,
                         removeOnClick = removeOnClick,
                         updateOnClick = updateOnClick,
                         startQuizOnClick = startQuizOnClick
                     )
-
                 }
+
+
             }
         }
     }
@@ -117,7 +117,7 @@ class QuizzesScreen : Screen {
     @Composable
     fun QuizHolder(
         quiz: Quiz, modifier: Modifier = Modifier,
-        addQuestionsOnClick: Quiz.() -> Unit,
+        editQuestionsOnClick: Quiz.() -> Unit,
         removeOnClick: Quiz.() -> Unit,
         updateOnClick: Quiz.() -> Unit,
         startQuizOnClick: Quiz.() -> Unit,
@@ -138,7 +138,7 @@ class QuizzesScreen : Screen {
 
             QuizOptionsMenu(
                 showQuizOptions = showQuizOptions,
-                addQuestionsOnClick = addQuestionsOnClick,
+                editQuestionsOnClick = editQuestionsOnClick,
                 removeOnClick = removeOnClick,
                 updateOnClick = updateOnClick,
                 startQuizOnClick = startQuizOnClick,
@@ -150,7 +150,7 @@ class QuizzesScreen : Screen {
     @Composable
     fun QuizOptionsMenu(
         showQuizOptions: MutableState<Boolean>,
-        addQuestionsOnClick: Quiz.() -> Unit,
+        editQuestionsOnClick: Quiz.() -> Unit,
         removeOnClick: Quiz.() -> Unit,
         updateOnClick: Quiz.() -> Unit,
         quiz: Quiz,
@@ -163,10 +163,10 @@ class QuizzesScreen : Screen {
             DropdownMenuItem(
                 onClick = {
                     showQuizOptions.value = false;
-                    addQuestionsOnClick.invoke(quiz)
+                    editQuestionsOnClick.invoke(quiz)
                 }
             ) {
-                Text("add questions")
+                Text("edit questions")
             }
             DropdownMenuItem(
                 onClick = {
