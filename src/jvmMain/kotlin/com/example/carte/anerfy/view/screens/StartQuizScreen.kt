@@ -20,7 +20,7 @@ class StartQuizScreen(private val quiz: Quiz) : Screen {
     @Composable
     override fun Screen(screenShowing: MutableState<Screen>) {
         val quizIterator = quiz.questions.iterator()
-        var score by remember { mutableStateOf(0) }
+        var answeredCorrectly by remember { mutableStateOf(0) }
         var questionNumber by remember { mutableStateOf(0) }
         var currentQuestion by remember {
             mutableStateOf(
@@ -50,9 +50,16 @@ class StartQuizScreen(private val quiz: Quiz) : Screen {
                     },
                     composTwo = {
                         NextQuestionButton {
+                            if (answerSelected == currentQuestion.answer)
+                                answeredCorrectly++;
+
                             if (quizIterator.hasNext()) {
                                 questionNumber++;
+
                                 currentQuestion = quizIterator.next();
+                            } else {
+                                screenShowing.value =
+                                    QuizResultScreen(quiz, answeredCorrectly / questionNumber.toFloat())
                             }
                         }
                     }

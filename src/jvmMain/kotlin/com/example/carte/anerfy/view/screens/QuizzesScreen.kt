@@ -1,8 +1,6 @@
 package com.example.carte.anerfy.view.screens
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -15,12 +13,14 @@ import androidx.compose.ui.unit.dp
 import com.example.carte.anerfy.model.Quiz
 import com.example.carte.anerfy.update.QuizRepository
 import com.example.carte.anerfy.view.animate.LoadingVisibilityAnimation
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class QuizzesScreen : Screen {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Composable
     override fun Screen(screenShowing: MutableState<Screen>) {
         val quizzesList = remember {
@@ -51,6 +51,7 @@ class QuizzesScreen : Screen {
             modifier = Modifier.padding(20.dp).fillMaxSize()
         ) {
             QuizListView(quizzesList,
+                modifier = Modifier.heightIn(0.dp, 460.dp).verticalScroll(rememberScrollState(0)),
                 editQuestionsOnClick = {
                     screenShowing.value = EditQuestionsScreen(this)
                 },
@@ -86,16 +87,21 @@ class QuizzesScreen : Screen {
     @Composable
     fun QuizListView(
         quizzesList: SnapshotStateList<Quiz>,
+        modifier: Modifier = Modifier,
         editQuestionsOnClick: Quiz.() -> Unit,
         removeOnClick: Quiz.() -> Unit,
         updateOnClick: Quiz.() -> Unit,
         startQuizOnClick: Quiz.() -> Unit,
     ) {
-        Column {
+        Column(
+            modifier = modifier
+        ) {
             for (quiz in quizzesList) {
 
+
                 Surface(
-                    elevation = 10.dp
+                    elevation = 10.dp,
+                    modifier = Modifier.padding(0.dp, 10.dp)
                 ) {
                     QuizHolder(
                         quiz,

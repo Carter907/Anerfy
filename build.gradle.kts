@@ -8,7 +8,7 @@ plugins {
 
 }
 
-group = "com.example"
+group = "com.example.carte.anerfy"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -44,10 +44,10 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "com.example.carte.anerfy.MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "getDataFromRestApi"
+            packageName = "Anerfy"
             packageVersion = "1.0.0"
         }
     }

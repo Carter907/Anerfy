@@ -15,6 +15,7 @@ import com.example.carte.anerfy.model.Quiz
 import com.example.carte.anerfy.update.QuizRepository
 import com.example.carte.anerfy.view.BasicAlert
 import com.example.carte.anerfy.view.AlertMessages
+import com.example.carte.anerfy.view.BackButton
 import com.example.carte.anerfy.view.StandardScreen
 import jakarta.persistence.Column
 import jakarta.persistence.ElementCollection
@@ -22,7 +23,7 @@ import jakarta.persistence.ElementCollection
 const val NUM_OF_QUESTIONS = 4;
 
 class AddQuestionScreen(
-    private val quiz: Quiz =
+    private var quiz: Quiz =
         Quiz(
             name = "",
             description = "",
@@ -93,18 +94,22 @@ class AddQuestionScreen(
                     }
                     ResetFormDataButton {
 
+                        quiz = QuizRepository.withTransaction {
+
+                            createQuery("select q from Quiz q where q.id = ${quiz.id}").singleResult as Quiz
+                        }
                         questionContent = "";
                         correctAnswer = "";
-                        showAnswerMenu = false;
+                        for (letter in 'A'..'D') {
+                            answerChoices.get(letter)?.value = "";
 
-                        for (letter in ('A'..'D')) {
-                            answerChoices[letter]?.value = "";
                         }
 
+
                     }
-                    Button(onClick = {
-                        screenShowing.value = QuizzesScreen();
-                    }) { Text("Back") }
+                    BackButton {
+                        screenShowing.value = EditQuestionsScreen(quiz);
+                    }
 
                 }
 
@@ -248,17 +253,17 @@ class AddQuestionScreen(
     ) {
         QuizRepository.withTransaction {
 
-            val newQuestion = question.apply {
-                content = questionContent;
-                answer = correctAnswer;
-                possibleAnswers = answerChoices.values.map { it.value }.toTypedArray();
-            }
-
+            val newQuestion = Question(
+                id = question.id,
+                content = questionContent,
+                answer = correctAnswer,
+                possibleAnswers = answerChoices.values.map { it.value }.toTypedArray()
+            )
+            println("before: ${quiz.questions}")
             quiz.questions = hashSetOf(
                 *quiz.questions.toMutableList().run {
 
-                    val replacedQuestion = find { it.id == newQuestion.id}
-
+                    val replacedQuestion = find { it.id == newQuestion.id }
                     if (replacedQuestion != null) {
                         set(indexOf(replacedQuestion), newQuestion)
                     } else {
@@ -270,6 +275,7 @@ class AddQuestionScreen(
                     toTypedArray()
                 }
             )
+            println("after ${quiz.questions}")
 
             if (quiz.id != null && find(Quiz::class.java, quiz.id) != null) {
 
@@ -279,6 +285,8 @@ class AddQuestionScreen(
 
                 persist(quiz)
             }
+
+
         }
     }
 

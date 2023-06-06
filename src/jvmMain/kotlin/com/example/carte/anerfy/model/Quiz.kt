@@ -6,7 +6,7 @@ import jakarta.persistence.*
 @Entity
 class Quiz (
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null,
     var name: String,
     var description: String,
